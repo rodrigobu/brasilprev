@@ -20,17 +20,18 @@ class TelegramBot():
         ''' Metodo utilizado para enviar uma mensagem via bot do Telegram.
         '''
         tipo, priv, chat_id = telepot.glance(chat)
-        msg = chat.get('text')
-        print('Mensagem: ', msg)
-        service = StackOverFlowService(texto=msg, tipo=tipo)
+        text = chat.get('text')
+        print('Mensagem: ', text)
+        service = StackOverFlowService(texto=text, tipo=tipo)
         status, msg = service.status_response()
-        if status:
-            json_response = service.json_response()
-            for question in json_response:
-                text = service.formatted_text(question)
-                self.telegram.sendMessage(chat_id, text)
-        else:
-            self.telegram.sendMessage(chat_id, msg)
+        if not text == '/start':
+            if status:
+                json_response = service.json_response()
+                for question in json_response:
+                    text = service.formatted_text(question)
+                    self.telegram.sendMessage(chat_id, text)
+            else:
+                self.telegram.sendMessage(chat_id, msg)
 
     def received_msg(self):
         '''
